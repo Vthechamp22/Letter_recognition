@@ -85,8 +85,8 @@ os.system('cls')
 
 score = 0
 
-for prdl, corl in final, correct:
-    if prdl == corl:
+for i in range(min(len(final), len(correct))):
+    if final[i] == correct[i]:
         score += 1
 
 accuracy = round((score / len(correct)) * 100, 5)
