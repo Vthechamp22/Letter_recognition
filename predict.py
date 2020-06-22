@@ -49,6 +49,9 @@ def recognise_contours(img, contours, model):
         [x,y,w,h] = cv2.boundingRect(cnt) #Get the bounding box of the detected contours
         roi = img[y-3 : y+h + 3, x-3 : x+w + 3] #define the contoured image as a region of image and give it a little space of 3 px on each side
 
+        # cv2.imshow('roi', roi)
+        # cv2.waitKey(0)
+
         roi = cv2.resize(roi, (28, 28))
         
         roi = np.reshape(roi, [-1, 28, 28, 1])
@@ -64,15 +67,12 @@ def recog(img, model):
 
     return config.alphabets[np.argmax(model.predict(img))]
 
-def get_correct():
-    pass
-
 path, text = get_filepath()
 
 if text is None:
     correct = input("Type the correct string: ") #Ask the user for the correct string
 else:
-    correct = open(text, 'r').read().capitalize()
+    correct = open(text, 'r').read().upper()
 
 #NOTE You can make the program mess with the images and predict for each. Append these letter to a list. Then, chose the element which is the most common
 
@@ -80,7 +80,7 @@ img, thresh, edged, contours = ready_image(path, 200)
 
 model = load_the_model(config.model_path)
 
-final = recog(img, model)
+final = recognise_contours(img, contours, model)
 os.system('cls')
 
 score = 0
