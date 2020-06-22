@@ -10,7 +10,10 @@ def get_filepath():
     '''Grab the image the user wrote'''
     Ap = argparse.ArgumentParser()
     Ap.add_argument("-f", "--file", required=True, help="Path to the image")
-    return vars(Ap.parse_args())['file']
+    Ap.add_argument("-t", "--text", help="Path to the text file (Not required)")
+    ima = vars(Ap.parse_args())['file']
+    txt = vars(Ap.parse_args())['text']
+    return ima, txt
 
 def ready_image(filepath, thresh_val):
     '''Loads the image and returns the image, threshold, edged image and a list of detected contours'''
@@ -61,18 +64,35 @@ def recog(img, model):
 
     return config.alphabets[np.argmax(model.predict(img))]
 
-path = get_filepath()
+def get_correct():
+    pass
+
+path, text = get_filepath()
+
+if text is None:
+    correct = input("Type the correct string: ") #Ask the user for the correct string
+else:
+    correct = open(text, 'r').read()
 
 #NOTE You can make the program mess with the images and predict for each. Append these letter to a list. Then, chose the element which is the most common
 
-while True:
-    input()
+img, thresh, edged, contours = ready_image(path, 200)
 
-    img, thresh, edged, contours = ready_image(path, 200)
+model = load_the_model(config.model_path)
 
-    model = load_the_model(config.model_path)
+final = recog(img, model)
+os.system('cls')
 
-    final = recog(img, model)
-    os.system('cls')
+score = 0
 
-    print(f"{final}")
+for prdl, corl in final, correct:
+    if prdl == corl:
+        score += 1
+
+accuracy = round((score / len(correct)) * 100, 5)
+
+print(\
+f"""
+Predicted : {final}
+Correct   : {correct}
+Accuracy  : {accuracy} %""")
