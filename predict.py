@@ -72,7 +72,7 @@ path, text = get_filepath()
 if text is None:
     correct = input("Type the correct string: ") #Ask the user for the correct string
 else:
-    correct = open(text, 'r').read()
+    correct = open(text, 'r').read().capitalize()
 
 #NOTE You can make the program mess with the images and predict for each. Append these letter to a list. Then, chose the element which is the most common
 
