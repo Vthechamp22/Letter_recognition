@@ -1,12 +1,12 @@
 Python Model Test
 
-icebergs  = 
-validate = 
-icescapes = 
-vacations = 
-liability = 
-abandoned = 
-dabbing = 
-eaglewoods = 
-ultrahot = 
-typewrite = 
+icebergs  = 75 % (ICERFRGS)
+validate = 100 % (VALIDATE)
+icescapes = 100.0 % (ICESCAPES)
+vacations = 88.88889 % (VACATIOWS)
+liability = 100.0 % (LIABILITY)
+abandoned = 88.88889 % (ARANDONED)
+dabbing = 85.71429 % (DABBIWG)
+eaglewoods = 90.0 % (GAGLEWOODS)
+ultrahot = 100.0 % (ULTRAHOT)
+typewrite = 100.0 % (TYPEWRITE)
