@@ -1,14 +1,24 @@
 Python Model Test
 
-icebergs  = 75 % (ICERFRGS)
+icebergs  = 75 % (ICERFRGS) -
 validate = 100 % (VALIDATE)
 icescapes = 100.0 % (ICESCAPES)
-vacations = 88.88889 % (VACATIOWS)
+vacations = 88.88889 % (VACATIOWS) - 
 liability = 100.0 % (LIABILITY)
-abandoned = 88.88889 % (ARANDONED)
-dabbing = 85.71429 % (DABBIWG)
+abandoned = 88.88889 % (ARANDONED) - 
+dabbing = 85.71429 % (DABBIWG) -
 eaglewoods = 90.0 % (GAGLEWOODS)
 ultrahot = 100.0 % (ULTRAHOT)
 typewrite = 100.0 % (TYPEWRITE)
 
 Average = 92.8492 %
+
+lowest = 75%
+Highest = 100%
+
+Range = 25 %
+Mode = 100 %
+Dispersal = 12.5 %
+Median = 95 %
+
+Sorted = 75, 85.71, 88, 88, 90, 100, 100, 100, 100, 100 
