@@ -44,13 +44,15 @@ def recognise_contours(img, contours, model):
 
     #Define the final string the model will predict
     string = ''
+    xs = [cv2.boundingRect(i)[0] for i in contours]
+    indxs = [xs.index(x) for x in sorted(xs)]
+    contours = [contours[i] for i in indxs]
 
     for cnt in contours:
         [x,y,w,h] = cv2.boundingRect(cnt) #Get the bounding box of the detected contours
-        roi = img[y-3 : y+h + 3, x-3 : x+w + 3] #define the contoured image as a region of image and give it a little space of 3 px on each side
+        roi = img[y-10 : y+h + 10, x-10 : x+w + 10] #define the contoured image as a region of image and give it a little space of 3 px on each side
 
-        # cv2.imshow('roi', roi)
-        # cv2.waitKey(0)
+        plt.imshow(roi)
 
         roi = cv2.resize(roi, (28, 28))
         
