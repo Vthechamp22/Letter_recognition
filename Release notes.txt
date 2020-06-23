@@ -1,0 +1,3 @@
+Achieved: Recognition of Single words of an avg accuracy of about 92%
+Features: Ignores small noise. fixed glitch in which it detected same region twice. Improved accuracy calculation
+Model tested with 10 words, you can find them and their results in 'predict_test_results'
