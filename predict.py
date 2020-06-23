@@ -53,12 +53,18 @@ def recognise_contours(img, contours, model, to_view):
     xs = [cv2.boundingRect(i)[0] for i in contours]
     indxs = [xs.index(x) for x in sorted(xs)]
     contours = [contours[i] for i in indxs]
-
+    prev_x = None
     for cnt in contours:
         [x,y,w,h] = cv2.boundingRect(cnt) #Get the bounding box of the detected contours
+        if prev_x == None:
+            # print('prev_x is NONE')
+            pass
+        elif x - prev_x < 20: #Make sure a contour is not detected twice
+            # print("Contours are close")
+            continue
         roi = img[y-10 : y+h + 10, x-10 : x+w + 10] #define the contoured image as a region of image and give it a little space of 5 px on each side
 
-        if w < 25:
+        if w < 20 and h < 20:
             continue
 
         if to_view:
@@ -68,6 +74,8 @@ def recognise_contours(img, contours, model, to_view):
         roi = cv2.resize(roi, (28, 28))
         
         roi = np.reshape(roi, [-1, 28, 28, 1])
+
+        prev_x = x
 
         string += config.alphabets[np.argmax(model.predict(roi))]
 
@@ -91,8 +99,10 @@ def main():
         correct = open(text, 'r').read().upper()
 
     # NOTE You can make the program mess with the images and predict for each. Append these letter to a list. Then, chose the element which is the most common
+    # thresh edged
+    #   ↓      ↙
 
-    img, thresh, edged, contours = ready_image(path, 200)
+    img, _, _, contours = ready_image(path, 200)
 
     model = load_the_model(config.model_path)
 
@@ -101,7 +111,7 @@ def main():
     else:
         predicted = recognise_contours(img, contours, model, False)
 
-    os.system('cls')
+    # os.system('cls')
 
     score = 0
 
@@ -114,10 +124,7 @@ def main():
 
     accuracy = round((score / max(len(correct), len(predicted))) * 100, 5)
 
-    print(f"""
-Predicted : {predicted}
-Correct   : {correct}
-Accuracy  : {accuracy} %""")
+    print(f"""Predicted : {predicted}\nCorrect   : {correct}\nAccuracy  : {accuracy} %""")
 
 
 if __name__ == "__main__":
