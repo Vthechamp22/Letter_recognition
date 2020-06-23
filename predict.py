@@ -6,14 +6,18 @@ import config
 import matplotlib.pyplot as plt
 import os
 
+
 def get_filepath():
     '''Grab the image the user wrote'''
     Ap = argparse.ArgumentParser()
     Ap.add_argument("-f", "--file", required=True, help="Path to the image")
     Ap.add_argument("-t", "--text", help="Path to the text file (Not required)")
+    Ap.add_argument("-v", "--view", action='store_true', help="Option to view the images or not")
     ima = vars(Ap.parse_args())['file']
     txt = vars(Ap.parse_args())['text']
-    return ima, txt
+    view = vars(Ap.parse_args())['view']
+    return ima, txt, view
+
 
 def ready_image(filepath, thresh_val):
     '''Loads the image and returns the image, threshold, edged image and a list of detected contours'''
@@ -33,13 +37,15 @@ def ready_image(filepath, thresh_val):
 
     return img, thresh, edged, contours
 
+
 def load_the_model(model_path):
     '''loads and returns the model'''
     model = load_model(model_path)
     # os.system('cls') #Clear the screen again
     return model
 
-def recognise_contours(img, contours, model):
+
+def recognise_contours(img, contours, model, to_view):
     '''Recognises the images in a given list of contours'''
 
     #Define the final string the model will predict
@@ -50,9 +56,14 @@ def recognise_contours(img, contours, model):
 
     for cnt in contours:
         [x,y,w,h] = cv2.boundingRect(cnt) #Get the bounding box of the detected contours
-        roi = img[y-10 : y+h + 10, x-10 : x+w + 10] #define the contoured image as a region of image and give it a little space of 3 px on each side
+        roi = img[y-10 : y+h + 10, x-10 : x+w + 10] #define the contoured image as a region of image and give it a little space of 5 px on each side
 
-        plt.imshow(roi)
+        if w < 25:
+            continue
+
+        if to_view:
+            plt.imshow(roi, cmap=plt.cm.binary)
+            plt.show()
 
         roi = cv2.resize(roi, (28, 28))
         
@@ -62,6 +73,7 @@ def recognise_contours(img, contours, model):
 
     return string
 
+
 def recog(img, model):
     img = cv2.resize(img, (28, 28))
 
@@ -69,32 +81,44 @@ def recog(img, model):
 
     return config.alphabets[np.argmax(model.predict(img))]
 
-path, text = get_filepath()
 
-if text is None:
-    correct = input("Type the correct string: ") #Ask the user for the correct string
-else:
-    correct = open(text, 'r').read().upper()
+def main():
+    path, text, view = get_filepath()
 
-#NOTE You can make the program mess with the images and predict for each. Append these letter to a list. Then, chose the element which is the most common
+    if text is None:
+        correct = input("Type the correct string: ").upper()  # Ask the user for the correct string
+    else:
+        correct = open(text, 'r').read().upper()
 
-img, thresh, edged, contours = ready_image(path, 200)
+    # NOTE You can make the program mess with the images and predict for each. Append these letter to a list. Then, chose the element which is the most common
 
-model = load_the_model(config.model_path)
+    img, thresh, edged, contours = ready_image(path, 200)
 
-final = recognise_contours(img, contours, model)
-os.system('cls')
+    model = load_the_model(config.model_path)
 
-score = 0
+    if view:
+        predicted = recognise_contours(img, contours, model, True)
+    else:
+        predicted = recognise_contours(img, contours, model, False)
 
-for i in range(min(len(final), len(correct))):
-    if final[i] == correct[i]:
-        score += 1
+    os.system('cls')
 
-accuracy = round((score / len(correct)) * 100, 5)
+    score = 0
 
-print(\
-f"""
-Predicted : {final}
+    for i in range(max(len(predicted), len(correct))):
+        try:
+            if predicted[i] == correct[i]:
+                score += 1
+        except IndexError:
+            pass
+
+    accuracy = round((score / max(len(correct), len(predicted))) * 100, 5)
+
+    print(f"""
+Predicted : {predicted}
 Correct   : {correct}
 Accuracy  : {accuracy} %""")
+
+
+if __name__ == "__main__":
+    main()

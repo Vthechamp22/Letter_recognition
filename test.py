@@ -1,5 +1,7 @@
-a = [[1, 5, 3], [1, 3, 6]]
+import argparse
 
-b = [sorted(i) for i in a]
+Ap = argparse.ArgumentParser()
+Ap.add_argument('-q', '--q', action='store_true')
+qwe = vars(Ap.parse_args())['q']
 
-print(b)
+print(qwe)
